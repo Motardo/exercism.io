@@ -60,15 +60,15 @@ pre.prettyprint {
   word-wrap: normal;
   overflow-wrap: normal;
   white-space: pre;
+  code {
+    overflow: auto;
+    -ms-word-wrap: normal;
+    word-wrap: normal;
+    overflow-wrap: normal;
+    white-space: pre;
+  }
 }
 
-pre code {
-  overflow: auto;
-  -ms-word-wrap: normal;
-  word-wrap: normal;
-  overflow-wrap: normal;
-  white-space: pre;
-}
 
 /* Specify class=linenums on a pre to get line numbering */
 ol.linenums { margin-top: 0; margin-bottom: 0 } /* IE indents via margin-left */
