@@ -54,8 +54,6 @@ $ ->
     emojify.setConfig(emoticons_enabled: false)
     emojify.run(document.getElementsByClassName("comments")[0])
 
-  PR.prettyPrint()
-
 localStorageHasKey = (key) ->
   return localStorage.getItem(key) != null
 

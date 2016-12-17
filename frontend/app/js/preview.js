@@ -9,11 +9,11 @@ $(function() {
       var files = Object.values(solution);
 
       files.forEach(function(file, index) {
-        var code = $('<code />').text(file).html();
-        $('#file-' + index).html('<pre class="prettyprint linenums">' +
-            code + '</pre>');
+        var currentText = $('#submission-code-' + index).text();
+        var differ = new WikEdDiff();
+        var diffHtml = differ.diff(file, currentText);
+        $('#file-' + index + ' .code').html(diffHtml);
       });
-      PR.prettyPrint();
     }
   }, function() {
     if (!$(this).hasClass('active')) {
