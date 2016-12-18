@@ -15,10 +15,15 @@
     border-right: 1px solid #ddd;
     padding: 5px 10px 5px 0px;
     white-space: nowrap;
+    vertical-align: top;
   }
 
   .lineno a {
     color: #999;
+  }
+
+  td.code {
+    vertical-align: top;
   }
 
   td.code pre {
