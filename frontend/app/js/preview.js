@@ -11,17 +11,18 @@ $(function() {
     $(this).html(codeBlock.html());
   });
 
-  $('.iterations-nav-item').hover(function() {
+  var iterationsNavItems = $('.iterations-nav-item');
+  iterationsNavItems.hover(function() {
     if (!$(this).hasClass('active')) {
       var files = $(this).data('solution');
 
       files.forEach(function(file, index) {
-       // var currentText = $('#submission-code-' + index).text();
         var codeBlock = $('#code-block-' + index);
         codeBlock.text(file[1]);
         codeBlock.each(function(i,b) {
           hljs.highlightBlock(b);
         });
+       // var currentText = $('#submission-code-' + index).text();
        // var differ = new WikEdDiff();
        // var diffHtml = differ.diff(file[1], currentText);
        // $('#file-' + index + ' .code').html(diffHtml);
@@ -36,4 +37,15 @@ $(function() {
       });
     }
   });
+
+  if (iterationsNavItems.length > 1) {
+    var btnShowDiff = $('.btn-show-diff');
+    btnShowDiff.removeClass('hidden');
+
+    btnShowDiff.on('click', function(e) {
+      e.preventDefault();
+      $(this).toggleClass('active');
+      // if hasClass active 
+    });
+  }
 });
