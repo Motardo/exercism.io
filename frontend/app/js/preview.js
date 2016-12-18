@@ -5,13 +5,12 @@ $(function() {
 
   $('.iterations-nav-item').hover(function() {
     if (!$(this).hasClass('active')) {
-      var solution = $(this).data('solution');
-      var files = Object.values(solution);
+      var files = $(this).data('solution');
 
       files.forEach(function(file, index) {
         var currentText = $('#submission-code-' + index).text();
         var differ = new WikEdDiff();
-        var diffHtml = differ.diff(file, currentText);
+        var diffHtml = differ.diff(file[1], currentText);
         $('#file-' + index + ' .code').html(diffHtml);
       });
     }
@@ -20,7 +19,6 @@ $(function() {
       $('.preview-swap').each(function () {
         $(this).next().html($(this).html());
       });
-
     }
   });
 });
