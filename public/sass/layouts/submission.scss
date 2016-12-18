@@ -142,6 +142,11 @@
       border-bottom-width: 0;
     }
   }
+  .highlight {
+    pre, code {
+      white-space: pre;
+    }
+  }
   .comments {
     h3 {
       margin-top: 0px;
