@@ -43,9 +43,11 @@ $(function() {
     btnShowDiff.on('click', function(e) {
       e.preventDefault();
       var activeTab = $('.iterations-nav-item.active');
+      var linenums = $('.submission-code-body pre.lineno a');
       if ($(this).hasClass('active')) {
         iterationsNavItemInactive.removeClass('diffed-old');
         activeTab.removeClass('diffed-new');
+        linenums.css('color', '#999999');
         restoreCodeBlocks();
       } else {
         var otherTab = activeTab.prev('.iterations-nav-item');
@@ -64,6 +66,7 @@ $(function() {
         });
         otherTab.addClass('diffed-old');
         activeTab.addClass('diffed-new');
+        linenums.css('color', '#f84');
       }
       $('.btn-show-diff').toggleClass('active');
     });
