@@ -1,4 +1,13 @@
 $(function() {
+
+  var restoreCodeBlocks = function () {
+    $('.preview-swap').each(function () {
+      var index = $(this).data('index');
+      var codeBlock = $('#code-block-' + index);
+      codeBlock.html($(this).html());
+    });
+  };
+
   $('.preview-swap').each(function () {
     var index = $(this).data('index');
     var rougeBlock = $('#file-' + index + ' td.code pre');
@@ -11,41 +20,52 @@ $(function() {
     $(this).html(codeBlock.html());
   });
 
-  var iterationsNavItems = $('.iterations-nav-item');
-  iterationsNavItems.hover(function() {
-    if (!$(this).hasClass('active')) {
-      var files = $(this).data('solution');
+  var iterationsNavItemInactive = $('.iterations-nav-item:not(.active)');
 
-      files.forEach(function(file, index) {
-        var codeBlock = $('#code-block-' + index);
-        codeBlock.text(file[1]);
-        codeBlock.each(function(i,b) {
-          hljs.highlightBlock(b);
-        });
-       // var currentText = $('#submission-code-' + index).text();
-       // var differ = new WikEdDiff();
-       // var diffHtml = differ.diff(file[1], currentText);
-       // $('#file-' + index + ' .code').html(diffHtml);
+  iterationsNavItemInactive.hover(function() {
+    var files = $(this).data('solution');
+
+    files.forEach(function(file, index) {
+      var codeBlock = $('#code-block-' + index);
+      codeBlock.text(file[1]);
+      codeBlock.each(function(i,b) {
+        hljs.highlightBlock(b);
       });
-    }
+    });
   }, function() {
-    if (!$(this).hasClass('active')) {
-      $('.preview-swap').each(function () {
-        var index = $(this).data('index');
-        var codeBlock = $('#code-block-' + index);
-        codeBlock.html($(this).html());
-      });
-    }
+    restoreCodeBlocks();
   });
 
-  if (iterationsNavItems.length > 1) {
+  if (iterationsNavItemInactive.length > 0) {
     var btnShowDiff = $('.btn-show-diff');
-    btnShowDiff.removeClass('hidden');
 
+    btnShowDiff.removeClass('hidden');
     btnShowDiff.on('click', function(e) {
       e.preventDefault();
-      $(this).toggleClass('active');
-      // if hasClass active 
+      var activeTab = $('.iterations-nav-item.active');
+      if ($(this).hasClass('active')) {
+        iterationsNavItemInactive.removeClass('diffed-old');
+        activeTab.removeClass('diffed-new');
+        restoreCodeBlocks();
+      } else {
+        var otherTab = activeTab.prev('.iterations-nav-item');
+        if (otherTab.length < 1) {
+          otherTab = activeTab.next('.iterations-nav-item');
+        }
+        var otherSolution = otherTab.data('solution');
+        otherSolution.forEach(function(file, index) {
+          var currentText = $('#submission-code-' + index).text();
+          var wikEdDiff = new WikEdDiff();
+          var diff = wikEdDiff.diff(file[1], currentText);
+          var diffElem = $.parseHTML(diff);
+          // remove the outer <pre> tag
+          var preInnerHtml = $(diffElem).find('pre').html();
+          $('#code-block-' + index).html(preInnerHtml);
+        });
+        otherTab.addClass('diffed-old');
+        activeTab.addClass('diffed-new');
+      }
+      $('.btn-show-diff').toggleClass('active');
     });
   }
 });

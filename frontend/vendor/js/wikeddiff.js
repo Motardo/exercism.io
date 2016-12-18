@@ -164,7 +164,7 @@ var WikEdDiff = function () {
 		 * @var bool config.showBlockMoves
 		 *   Enable block move layout with highlighted blocks and marks at the original positions (true)
 		 */
-		'showBlockMoves': true,
+		'showBlockMoves': false,
 
 		/**
 		 * @var bool config.charDiff
@@ -407,7 +407,7 @@ var WikEdDiff = function () {
 			// Wrappers
 			'.wikEdDiffContainer { } ' +
 			'.wikEdDiffFragment {' +
-			'white-space: pre-wrap; background: #fff; border: #bbb solid; ' +
+			'white-space: pre; padding: 0; background: #fff; border: #bbb solid; ' +
 			//'border-width: 1px 1px 1px 0.5em; border-radius: 0.5em; font-family: Menlo,Monaco,Consolas,"Courier New",monospace; ' +
 			//'font-size: 13px; line-height: 1.6; box-shadow: 2px 2px 2px #ddd; padding: 1em; margin: 0; ' +
 			'} ' +
@@ -651,7 +651,7 @@ var WikEdDiff = function () {
 		'containerStart': '<div class="wikEdDiffContainer" id="wikEdDiffContainer">',
 		'containerEnd': '</div>',
 
-		'fragmentStart': '<pre class="wikEdDiffFragment" style="white-space: pre-wrap;">',
+		'fragmentStart': '<pre class="wikEdDiffFragment" style="white-space: pre;">',
 		'fragmentEnd': '</pre>',
 		'separator': '<div class="wikEdDiffSeparator"></div>',
 

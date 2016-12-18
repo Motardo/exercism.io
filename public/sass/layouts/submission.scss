@@ -88,6 +88,26 @@
         @extend .fa-refresh;
         color: $brand-info;
       }
+      .diffed-new a {
+        border-bottom-color: white;
+        background: linear-gradient(to top, white, #cfc);
+        background: moz-linear-gradient(bottom, white, #cfc);
+        background: webkit-linear-gradient(bottom, white, #cfc);
+        background: o-linear-gradient(bottom, white, #cfc);
+      }
+      .diffed-old {
+
+        a {
+          border-bottom: transparent;
+          background: linear-gradient(to top, white, #fcc);
+          background: moz-linear-gradient(bottom, white, #fcc);
+          background: webkit-linear-gradient(bottom, white, #fcc);
+          background: o-linear-gradient(bottom, white, #fcc);
+        }
+        :hover {
+          border: 1px solid #ccc;
+        }
+      }
     }
   }
   .submission-iteration {
