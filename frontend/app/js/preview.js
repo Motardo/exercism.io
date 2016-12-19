@@ -8,6 +8,10 @@ $(function() {
     });
   };
 
+  var submissionCodeBlocks = $('.submission-code-body td.code');
+
+  submissionCodeBlocks.hide();
+
   $('.preview-swap').each(function () {
     var index = $(this).data('index');
     var codeBlock = $('#file-' + index + ' td.code');
@@ -19,11 +23,12 @@ $(function() {
     $(this).html(codeBlock.html());
   });
 
+  submissionCodeBlocks.show();
+
   var iterationsNavItemInactive = $('.iterations-nav-item:not(.active)');
 
-  iterationsNavItemInactive.hover(function() {
-    var files = $(this).data('solution');
-
+  function highlightBlocks (otherTab) {
+    var files = otherTab.data('solution');
     files.forEach(function(file, index) {
       var codeBlock = $('#file-' + index + ' td.code > pre > code');
       codeBlock.text(file[1]);
@@ -31,8 +36,32 @@ $(function() {
         hljs.highlightBlock(b);
       });
     });
+  }
+
+  function diffBlocks (otherTab) {
+    var files = otherTab.data('solution');
+    files.forEach(function(file, index) {
+      var currentText = $('#submission-code-' + index).text();
+      var wikEdDiff = new WikEdDiff();
+      var diff = wikEdDiff.diff(file[1], currentText);
+      $('#file-' + index + ' td.code').html(diff);
+    });
+    otherTab.addClass('diffed-old');
+  }
+
+  iterationsNavItemInactive.hover(function() {
+    if ($('#submission').hasClass('diffed')) {
+      if (!$(this).hasClass('diffed-old')) {
+        iterationsNavItemInactive.removeClass('diffed-old');
+        diffBlocks($(this));
+      }
+    } else {
+      highlightBlocks($(this));
+    }
   }, function() {
-    restoreCodeBlocks();
+    if (!$('#submission').hasClass('diffed')) {
+      restoreCodeBlocks();
+    }
   });
 
   if (iterationsNavItemInactive.length > 0) {
@@ -41,23 +70,16 @@ $(function() {
     btnShowDiff.removeClass('hidden');
     btnShowDiff.on('click', function(e) {
       e.preventDefault();
-      var activeTab = $('.iterations-nav-item.active');
       if ($('#submission').hasClass('diffed')) {
         iterationsNavItemInactive.removeClass('diffed-old');
         restoreCodeBlocks();
       } else {
+        var activeTab = $('.iterations-nav-item.active');
         var otherTab = activeTab.prev('.iterations-nav-item');
         if (otherTab.length < 1) {
           otherTab = activeTab.next('.iterations-nav-item');
         }
-        var otherSolution = otherTab.data('solution');
-        otherSolution.forEach(function(file, index) {
-          var currentText = $('#submission-code-' + index).text();
-          var wikEdDiff = new WikEdDiff();
-          var diff = wikEdDiff.diff(file[1], currentText);
-          $('#file-' + index + ' td.code').html(diff);
-        });
-        otherTab.addClass('diffed-old');
+        diffBlocks(otherTab);
       }
       $('#submission').toggleClass('diffed');
     });
