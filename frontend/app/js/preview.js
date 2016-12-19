@@ -44,7 +44,7 @@ $(function() {
       e.preventDefault();
       var activeTab = $('.iterations-nav-item.active');
 //      var linenums = $('.submission-code-body pre.lineno a');
-      if ($(this).hasClass('active')) {
+      if ($('#submission').hasClass('diffed')) {
         iterationsNavItemInactive.removeClass('diffed-old');
 //        activeTab.removeClass('diffed-new');
 //        linenums.css('color', '#999999');
