@@ -3,7 +3,8 @@ $(function() {
   var restoreCodeBlocks = function () {
     $('.preview-swap').each(function () {
       var index = $(this).data('index');
-      var codeBlock = $('#code-block-' + index);
+      // var codeBlock = $('#code-block-' + index);
+      var codeBlock = $('#file-' + index + ' td.code');
       codeBlock.html($(this).html());
     });
   };
@@ -17,7 +18,8 @@ $(function() {
     codeBlock.each(function (i, block) {
       hljs.highlightBlock(block);
     });
-    $(this).html(codeBlock.html());
+    // $(this).html(codeBlock.html());
+    $(this).html($('#file-' + index + ' td.code').html());
   });
 
   var iterationsNavItemInactive = $('.iterations-nav-item:not(.active)');
@@ -26,7 +28,8 @@ $(function() {
     var files = $(this).data('solution');
 
     files.forEach(function(file, index) {
-      var codeBlock = $('#code-block-' + index);
+      // var codeBlock = $('#code-block-' + index);
+      var codeBlock = $('#file-' + index + ' td.code > pre > code');
       codeBlock.text(file[1]);
       codeBlock.each(function(i,b) {
         hljs.highlightBlock(b);
@@ -59,10 +62,11 @@ $(function() {
           var currentText = $('#submission-code-' + index).text();
           var wikEdDiff = new WikEdDiff();
           var diff = wikEdDiff.diff(file[1], currentText);
-          var diffElem = $.parseHTML(diff);
+          // var diffElem = $.parseHTML(diff);
           // remove the outer <pre> tag
-          var preInnerHtml = $(diffElem).find('pre').html();
-          $('#code-block-' + index).html(preInnerHtml);
+          // var preInnerHtml = $(diffElem).find('pre').html();
+          // $('#code-block-' + index).html(preInnerHtml);
+          $('#file-' + index + ' td.code').html(diff);
         });
         otherTab.addClass('diffed-old');
 //        activeTab.addClass('diffed-new');
