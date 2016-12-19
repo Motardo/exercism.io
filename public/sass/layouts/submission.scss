@@ -88,13 +88,6 @@
         @extend .fa-refresh;
         color: $brand-info;
       }
-      .diffed-new a {
-        border-bottom-color: white;
-        background: linear-gradient(to top, white, #cfc);
-        background: moz-linear-gradient(bottom, white, #cfc);
-        background: webkit-linear-gradient(bottom, white, #cfc);
-        background: o-linear-gradient(bottom, white, #cfc);
-      }
       .diffed-old {
 
         a {
@@ -171,5 +164,22 @@
     h3 {
       margin-top: 0px;
     }
+  }
+}
+#submission.diffed {
+  .iterations-nav-item.active {
+    a {
+      border-bottom-color: white;
+      background: linear-gradient(to top, white, #cfc);
+      background: moz-linear-gradient(bottom, white, #cfc);
+      background: webkit-linear-gradient(bottom, white, #cfc);
+      background: o-linear-gradient(bottom, white, #cfc);
+    }
+  }
+  .submission-code-body pre.lineno a {
+    color: #fb9;
+  }
+  .btn-show-diff {
+    @extend .active;
   }
 }
