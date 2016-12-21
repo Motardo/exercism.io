@@ -24,9 +24,9 @@
     activeSolution = $activeTab.data('solution');
 
     highlightCodeBlock = function(file, index) {
-      var codeBlock = $codeBlocks.eq(index).find('code');
-      codeBlock.text(file[1]);
-      hljs.highlightBlock(codeBlock[0]);
+      hljs.highlightBlock(
+        $codeBlocks.eq(index).find('code').text(file[1])
+        [0]);
     };
 
     diffCodeBlock = function(file, index) {
@@ -56,10 +56,13 @@
     $codeCache = $('<div id="code-cache" class="hidden">').appendTo($('#current_submission'));
     $codeBlocks.each(function (index, block) {
       var language = normalizeTrack($('#file-' + index).data('track'));
-      $(this).html('<pre><code class="lang-' + language + '">');
       $(this).addClass('lang-' + language);
-      $(this).find('code').text(activeSolution[index][1]);
-      hljs.highlightBlock($(this)[0]);
+      $('<code class="lang-' + language + '">')
+        .appendTo($(this).empty())
+        .wrap('<pre />');
+    });
+    activeSolution.forEach(highlightCodeBlock);
+    $codeBlocks.each(function () {
       $(this).clone().appendTo($codeCache);
     });
     $codeBlockCache = $('#code-cache td');
