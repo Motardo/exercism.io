@@ -1,87 +1,91 @@
-$(function() {
+(function () {
+  "use strict";
 
-  var restoreCodeBlocks = function () {
-    $('.preview-swap').each(function () {
-      var index = $(this).data('index');
-      var codeBlock = $('#file-' + index + ' td.code');
-      codeBlock.html($(this).html());
-    });
-  };
+  $(function() {
 
-  var submissionCodeBlocks = $('.submission-code-body td.code');
+    var activeSolution,
+        $activeTab,
+        $codeBlockCache,
+        $codeBlocks,
+        $codeCache,
+        diffCodeBlock,
+        highlightCodeBlock,
+        $iterationsNavItemInactive,
+        restoreCodeBlocks,
+        $submission;
+    
 
-  submissionCodeBlocks.hide();
+    $submission = $('#submission');
+    $activeTab = $('.iterations-nav-item.active');
+    activeSolution = $activeTab.data('solution');
+    $codeBlocks = $('.submission-code-body td.code');
 
-  $('.preview-swap').each(function () {
-    var index = $(this).data('index');
-    var codeBlock = $('#file-' + index + ' td.code');
-    var text = $('#submission-code-' + index).text();
-    codeBlock.html('<pre><code>' + text);
-    codeBlock.each(function (i, block) {
-      hljs.highlightBlock(block);
-    });
-    $(this).html(codeBlock.html());
-  });
-
-  submissionCodeBlocks.show();
-
-  var iterationsNavItemInactive = $('.iterations-nav-item:not(.active)');
-
-  function highlightBlocks (otherTab) {
-    var files = otherTab.data('solution');
-    files.forEach(function(file, index) {
-      var codeBlock = $('#file-' + index + ' td.code > pre > code');
+    highlightCodeBlock = function(file, index) {
+      var codeBlock = $codeBlocks.eq(index).find('code');
       codeBlock.text(file[1]);
-      codeBlock.each(function(i,b) {
-        hljs.highlightBlock(b);
+      hljs.highlightBlock(codeBlock[0]);
+    };
+
+    diffCodeBlock = function(file, index) {
+      var diff, wikEdDiff;
+      wikEdDiff = new WikEdDiff();
+      diff = wikEdDiff.diff(file[1], activeSolution[index][1]);
+      $codeBlocks.eq(index).html(diff);
+    };
+
+    restoreCodeBlocks = function () {
+      $codeBlocks.each(function (index) {
+        $(this).html($codeBlockCache.eq(index).html());
       });
-    });
-  }
+    };
 
-  function diffBlocks (otherTab) {
-    var files = otherTab.data('solution');
-    files.forEach(function(file, index) {
-      var currentText = $('#submission-code-' + index).text();
-      var wikEdDiff = new WikEdDiff();
-      var diff = wikEdDiff.diff(file[1], currentText);
-      $('#file-' + index + ' td.code').html(diff);
+    $codeCache = $('<div id="code-cache" class="hidden">').appendTo($('#current_submission'));
+    $codeBlocks.each(function (index, block) {
+      var language = $('#file-' + index).data('track');
+      $(this).html('<pre><code class="lang-' + language + '">');
+      $(this).addClass('lang-' + language);
+      $(this).find('code').text(activeSolution[index][1]);
+      hljs.highlightBlock($(this)[0]);
+      $(this).clone().appendTo($codeCache);
     });
-    otherTab.addClass('diffed-old');
-  }
+    $codeBlockCache = $('#code-cache td');
 
-  iterationsNavItemInactive.hover(function() {
-    if ($('#submission').hasClass('diffed')) {
-      if (!$(this).hasClass('diffed-old')) {
-        iterationsNavItemInactive.removeClass('diffed-old');
-        diffBlocks($(this));
+    $iterationsNavItemInactive = $('.iterations-nav-item:not(.active)');
+
+    $iterationsNavItemInactive.hover(function() {
+      if ($submission.hasClass('diff-view')) {
+        if (!$(this).hasClass('diff-view-old')) {
+          $iterationsNavItemInactive.removeClass('diff-view-old');
+          $(this).data('solution').forEach(diffCodeBlock);
+          $(this).addClass('diff-view-old');
+        }
+      } else {
+        $(this).data('solution').forEach(highlightCodeBlock);
       }
-    } else {
-      highlightBlocks($(this));
-    }
-  }, function() {
-    if (!$('#submission').hasClass('diffed')) {
-      restoreCodeBlocks();
+    }, function() {
+      if (!$submission.hasClass('diff-view')) {
+        restoreCodeBlocks();
+      }
+    });
+
+    if ($iterationsNavItemInactive.length > 0) {
+      $('.btn-show-diff')
+      .removeClass('disabled')
+      .on('click', function(e) {
+        e.preventDefault();
+        if ($submission.hasClass('diff-view')) {
+          $iterationsNavItemInactive.removeClass('diff-view-old');
+          restoreCodeBlocks();
+        } else {
+          var otherTab = $activeTab.prev('.iterations-nav-item');
+          if (otherTab.length < 1) {
+            otherTab = $activeTab.next('.iterations-nav-item');
+          }
+          otherTab.data('solution').forEach(diffCodeBlock);
+          otherTab.addClass('diff-view-old');
+        }
+        $submission.toggleClass('diff-view');
+      });
     }
   });
-
-  if (iterationsNavItemInactive.length > 0) {
-    var btnShowDiff = $('.btn-show-diff');
-
-    btnShowDiff.removeClass('hidden');
-    btnShowDiff.on('click', function(e) {
-      e.preventDefault();
-      if ($('#submission').hasClass('diffed')) {
-        iterationsNavItemInactive.removeClass('diffed-old');
-        restoreCodeBlocks();
-      } else {
-        var activeTab = $('.iterations-nav-item.active');
-        var otherTab = activeTab.prev('.iterations-nav-item');
-        if (otherTab.length < 1) {
-          otherTab = activeTab.next('.iterations-nav-item');
-        }
-        diffBlocks(otherTab);
-      }
-      $('#submission').toggleClass('diffed');
-    });
-  }
-});
+})();

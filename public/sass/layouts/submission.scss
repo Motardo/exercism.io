@@ -88,19 +88,6 @@
         @extend .fa-refresh;
         color: $brand-info;
       }
-      .diffed-old {
-
-        a {
-          border-bottom: transparent;
-          background: linear-gradient(to top, white, #fcc);
-          background: moz-linear-gradient(bottom, white, #fcc);
-          background: webkit-linear-gradient(bottom, white, #fcc);
-          background: o-linear-gradient(bottom, white, #fcc);
-        }
-        :hover {
-          border: 1px solid #ccc;
-        }
-      }
     }
   }
   .submission-iteration {
@@ -166,14 +153,28 @@
     }
   }
 }
-#submission.diffed {
-  .iterations-nav-item.active {
-    a {
-      border-bottom-color: white;
-      background: linear-gradient(to top, white, #cfc);
-      background: moz-linear-gradient(bottom, white, #cfc);
-      background: webkit-linear-gradient(bottom, white, #cfc);
-      background: o-linear-gradient(bottom, white, #cfc);
+#submission.diff-view {
+  .iterations-nav-item {
+    &.active {
+      a {
+        border-bottom-color: white;
+        background: linear-gradient(to top, white, #cfc);
+        background: moz-linear-gradient(bottom, white, #cfc);
+        background: webkit-linear-gradient(bottom, white, #cfc);
+        background: o-linear-gradient(bottom, white, #cfc);
+      }
+    }
+    &.diff-view-old {
+      a {
+        border-bottom: transparent;
+        background: linear-gradient(to top, white, #fcc);
+        background: moz-linear-gradient(bottom, white, #fcc);
+        background: webkit-linear-gradient(bottom, white, #fcc);
+        background: o-linear-gradient(bottom, white, #fcc);
+      }
+      :hover {
+        border: 1px solid #ccc;
+      }
     }
   }
   .submission-code-body pre.lineno a {
