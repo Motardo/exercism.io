@@ -32,7 +32,9 @@
     <div class="clearfix"></div>
     </div>
 
-    <div class="submission-code-body">
+    <div class="submission-code-body"
+         id="file-<%= idx %>"
+         data-track="<%= submission.track_id %>">
       <%= syntax(code, submission.track_id) %>
     </div>
 
