@@ -3,15 +3,12 @@
 
   var activeSolution,
       $activeTab,
-      $codeBlockCache,
       $codeBlocks,
-      $codeCache,
       diffCodeBlock,
       findAdjacentTab,
       highlightCodeBlock,
       $iterationsNavItemInactive,
       normalizeTrack,
-      restoreCodeBlocks,
       initCodeBlocks,
       $submission,
       toggleDiffView;
@@ -38,16 +35,7 @@
     $codeBlocks.eq(index).html(diff);
   };
 
-  restoreCodeBlocks = function () {
-    $codeBlocks.each(function (index) {
-      $(this).html($codeBlockCache.eq(index).html());
-    });
-  };
-
-  // Highlight the code and cache a copy of the highlighted block for quickly
-  // restoring the view after a diff or preview of another iteration
   initCodeBlocks = function () {
-    $codeCache = $('<div id="code-cache" class="hidden">').appendTo($('#current_submission'));
     $codeBlocks.each(function (index, block) {
       var language = normalizeTrack($('#file-' + index).data('track'));
       $(this).addClass('lang-' + language);
@@ -56,16 +44,12 @@
         .wrap('<pre />');
     });
     activeSolution.forEach(highlightCodeBlock);
-    $codeBlocks.each(function () {
-      $(this).clone().appendTo($codeCache);
-    });
-    $codeBlockCache = $('#code-cache td');
   };
 
   toggleDiffView = function () {
     if ($submission.hasClass('diff-view')) {
       $iterationsNavItemInactive.removeClass('diff-view-old');
-      restoreCodeBlocks();
+      initCodeBlocks();
     } else {
       findAdjacentTab()
         .addClass('diff-view-old')
@@ -85,7 +69,9 @@
     return otherTab;
   };
 
+
   $(function() {
+
     $codeBlocks = $('.submission-code-body td.code');
     $activeTab = $('.iterations-nav-item.active');
     activeSolution = $activeTab.data('solution');
@@ -110,7 +96,7 @@
       }
     }, function() {
       if (!$submission.hasClass('diff-view')) {
-        restoreCodeBlocks();
+        activeSolution.forEach(highlightCodeBlock);
       }
     });
 
