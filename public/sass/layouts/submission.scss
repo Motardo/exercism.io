@@ -80,6 +80,19 @@
           text-align: center;
           color: $text-color;
         }
+        &.preview {
+          a {
+            $preview-color: scale-color($brand-primary, $lightness: 75%);
+            border-bottom-color: $body-bg;
+            background: linear-gradient(to top, $body-bg, $preview-color);
+            background: moz-linear-gradient(bottom, $body-bg, $preview-color);
+            background: webkit-linear-gradient(bottom, $body-bg, $preview-color);
+            background: o-linear-gradient(bottom, $body-bg, $preview-color);
+          }
+          &:not(.active) a {
+            border-bottom-color: $nav-tabs-border-color;
+          }
+        }
       }
       li:last-child a {
         min-width: 80px;
@@ -143,9 +156,6 @@
     }
   }
   .highlight {
-    pre, code {
-      white-space: pre;
-    }
     td.gutter, td.code {
       vertical-align: top;
     }

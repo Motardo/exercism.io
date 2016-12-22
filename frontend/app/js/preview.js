@@ -21,10 +21,12 @@
       $(this).data('solution').forEach(function (file, index) {
         $codeBlocks.eq(index).text(file[1]);
       });
+      $(this).addClass('preview');
     }, function () {
       $codeBlocks.each(function (index) {
         $(this).html(codeBlockCache[index]);
       });
+      $(this).removeClass('preview');
     });
 
   });
