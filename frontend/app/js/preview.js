@@ -3,12 +3,14 @@
 
   var codeBlockCache,
       $codeBlocks,
+      $codeWindows,
       $iterationsNavItem;
 
   $(function () {
 
     codeBlockCache = [];
-    $codeBlocks = $('.submission-code-body td.code > pre');
+    $codeWindows = $('.submission-code-body .highlight');
+    $codeBlocks = $codeWindows.find('td.code > pre');
     $iterationsNavItem = $('.iterations-nav-item');
 
     // Copy code blocks to a cache so we can restore syntax highlighting
@@ -21,12 +23,12 @@
       $(this).data('solution').forEach(function (file, index) {
         $codeBlocks.eq(index).text(file[1]);
       });
-      $(this).addClass('preview');
+      $codeWindows.addClass('preview');
     }, function () {
       $codeBlocks.each(function (index) {
         $(this).html(codeBlockCache[index]);
       });
-      $(this).removeClass('preview');
+      $codeWindows.removeClass('preview');
     });
 
   });
